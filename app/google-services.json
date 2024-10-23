@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "283849707927",
+    "project_id": "nook-g05-264ee",
+    "storage_bucket": "nook-g05-264ee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:283849707927:android:cc91104930c04e29acf4d2",
+        "android_client_info": {
+          "package_name": "com.es_g05.nook_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnqgFUjT-0iapjMQxR7yYPFi97tEfwwX0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
