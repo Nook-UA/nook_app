@@ -49,7 +49,7 @@ fun SignInScreen(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize().padding(top = 32.dp)) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.login_screen),
             contentDescription = "Login Background",

@@ -29,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.es_g05.nook_app.auth.GoogleAuthUiClient
+import com.es_g05.nook_app.ui.screens.MainScreen
 import com.es_g05.nook_app.ui.screens.ProfileScreen
 import com.es_g05.nook_app.ui.screens.SignInScreen
 import com.es_g05.nook_app.ui.theme.Nook_appTheme
@@ -118,21 +119,25 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable("profile") {
-                            ProfileScreen(
-                                userData = googleAuthUiClient.getSignedInUser(),
-                                onSignOut = {
-                                    lifecycleScope.launch {
-                                        googleAuthUiClient.signOut()
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "Signed Out",
-                                            Toast.LENGTH_LONG
-                                        ).show()
+                            val navController2 = rememberNavController()
+                            Surface(modifier = Modifier.fillMaxSize()) {
+                                MainScreen(
+                                    navController = navController2,
+                                    googleAuthUiClient = googleAuthUiClient,
+                                    onSignOut = {
+                                        lifecycleScope.launch {
+                                            googleAuthUiClient.signOut()
+                                            Toast.makeText(
+                                                applicationContext,
+                                                "Signed out",
+                                                Toast.LENGTH_LONG
+                                            ).show()
 
-                                        navController.popBackStack()
+                                            navController.popBackStack()
+                                        }
                                     }
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }
@@ -152,21 +157,5 @@ class MainActivity : ComponentActivity() {
             // Request the permission
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Nook_appTheme {
-        Greeting("Android")
     }
 }

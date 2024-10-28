@@ -131,33 +131,6 @@ fun MapScreen() {
                     }
                 }
             }
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(16.dp).align(Alignment.TopCenter),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .shadow(6.dp, shape = RoundedCornerShape(20.dp))
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(Color.White)
-                ) {
-                    IconButton(
-                        onClick = { },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "",
-                            tint = Color.Black
-                        )
-                    }
-                }
-                Image(
-                    painter = painterResource(id = R.drawable.avatar),
-                    contentDescription = "",
-                    modifier = Modifier.size(64.dp)
-                )
-            }
             SearchBar(
                 query = "",
                 onQueryChange = { },
