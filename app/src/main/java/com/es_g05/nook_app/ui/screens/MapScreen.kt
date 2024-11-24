@@ -40,6 +40,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.es_g05.nook_app.R
 import com.es_g05.nook_app.managers.RequestLocationPermission
+import com.es_g05.nook_app.ui.components.ParkMarkerComposable
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -52,7 +53,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("MissingPermission")
+@SuppressLint("MissingPermission", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MapScreen() {
 
@@ -64,6 +65,8 @@ fun MapScreen() {
     val park2 = LatLng(40.6388053454105, -8.652191713773961)
     val park3 = LatLng(40.64186580433356, -8.656481365804282)
     val park4 = LatLng(40.63451824048593, -8.656807479713201)
+
+    val parks = listOf(park1, park2, park3, park4)
 
     var userLocation by remember { mutableStateOf<LatLng?>(null) }
 
@@ -80,8 +83,8 @@ fun MapScreen() {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-    ) { innerPadding ->
-        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
@@ -89,45 +92,13 @@ fun MapScreen() {
                 properties = MapProperties(isMyLocationEnabled = userLocation != null)
             ) {
                 userLocation?.let {
+
                     Marker(
                         state = MarkerState(position = it),
                         title = "You are here"
                     )
-                    MarkerComposable(
-                        state = MarkerState(position = park1)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.location_marker),
-                            contentDescription = "",
-                            modifier = Modifier.size(50.dp)
-                        )
-                    }
-                    MarkerComposable(
-                        state = MarkerState(position = park2)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.location_marker),
-                            contentDescription = "",
-                            modifier = Modifier.size(50.dp)
-                        )
-                    }
-                    MarkerComposable(
-                        state = MarkerState(position = park3)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.location_marker),
-                            contentDescription = "",
-                            modifier = Modifier.size(50.dp)
-                        )
-                    }
-                    MarkerComposable(
-                        state = MarkerState(position = park4)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.location_marker),
-                            contentDescription = "",
-                            modifier = Modifier.size(50.dp)
-                        )
+                    parks.forEach {park ->
+                        ParkMarkerComposable(position = park)
                     }
                 }
             }

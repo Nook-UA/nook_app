@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
 
                             LaunchedEffect(key1 = Unit) {
                                 if (googleAuthUiClient.getSignedInUser() != null) {
-                                    navController.navigate("profile")
+                                    navController.navigate("home")
                                 }
                             }
 
@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
                                         Toast.LENGTH_LONG
                                     ).show()
 
-                                    navController.navigate("profile")
+                                    navController.navigate("home")
                                     viewModel.resetState()
                                 }
                             }
@@ -118,7 +118,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-                        composable("profile") {
+                        composable("home") {
                             val navController2 = rememberNavController()
                             Surface(modifier = Modifier.fillMaxSize()) {
                                 MainScreen(
