@@ -53,7 +53,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("MissingPermission")
+@SuppressLint("MissingPermission", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MapScreen() {
 
@@ -66,7 +66,7 @@ fun MapScreen() {
     val park3 = LatLng(40.64186580433356, -8.656481365804282)
     val park4 = LatLng(40.63451824048593, -8.656807479713201)
 
-    var parks = listOf(park1, park2, park3, park4)
+    val parks = listOf(park1, park2, park3, park4)
 
     var userLocation by remember { mutableStateOf<LatLng?>(null) }
 
@@ -83,8 +83,8 @@ fun MapScreen() {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-    ) { innerPadding ->
-        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -47,7 +46,7 @@ fun DrawerContent(
     scope: CoroutineScope,
     userData: UserData?
 ) {
-    val navItems = listOf(NavItem.Profile, NavItem.Home)
+    val navItems = listOf(NavItem.Home, NavItem.Profile)
     Column(
         modifier = Modifier.width(250.dp)
             .fillMaxHeight()

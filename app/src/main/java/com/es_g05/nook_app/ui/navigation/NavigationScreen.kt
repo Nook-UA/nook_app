@@ -25,8 +25,10 @@ fun NavigationScreen(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavItem.Profile.path
+        startDestination = NavItem.Home.path
     ) {
+        composable(NavItem.Home.path) { MapScreen() }
+
         composable(NavItem.Profile.path) {
             googleAuthUiClient.getSignedInUser()?.let {
                 ProfileScreen(
@@ -35,8 +37,6 @@ fun NavigationScreen(
                 )
             }
         }
-
-        composable(NavItem.Home.path) { MapScreen() }
     }
     ModalNavigationDrawer(
         drawerContent = {
