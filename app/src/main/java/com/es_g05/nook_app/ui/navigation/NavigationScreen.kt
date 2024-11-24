@@ -1,7 +1,5 @@
 package com.es_g05.nook_app.ui.navigation
 
-import android.content.Context
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ModalNavigationDrawer
@@ -29,8 +27,8 @@ fun NavigationScreen(
         navController = navController,
         startDestination = NavItem.Profile.path
     ) {
-        composable(NavItem.Profile.path) { googleAuthUiClient.getSignedInUser()
-            ?.let {
+        composable(NavItem.Profile.path) {
+            googleAuthUiClient.getSignedInUser()?.let {
                 ProfileScreen(
                     userData = googleAuthUiClient.getSignedInUser(),
                     onSignOut = onSignOut
@@ -38,15 +36,19 @@ fun NavigationScreen(
             }
         }
 
-        composable(NavItem.Map.path) { MapScreen() }
+        composable(NavItem.Home.path) { MapScreen() }
     }
     ModalNavigationDrawer(
         drawerContent = {
-            DrawerContent(navController = navController, onSignOut = onSignOut)
+            DrawerContent(
+                navController = navController,
+                onSignOut = onSignOut,
+                drawerState = drawerState, // Pass drawerState
+                scope = scope, // Pass scope
+                userData = googleAuthUiClient.getSignedInUser()
+            )
         },
-        modifier = Modifier.width(230.dp),
         drawerState = drawerState,
         gesturesEnabled = drawerState.isOpen,
-        scrimColor = Color.Black
     ) { }
 }

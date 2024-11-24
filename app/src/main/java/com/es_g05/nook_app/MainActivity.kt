@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
                                         Toast.LENGTH_LONG
                                     ).show()
 
-                                    navController.navigate("profile")
+                                    navController.navigate("home")
                                     viewModel.resetState()
                                 }
                             }
