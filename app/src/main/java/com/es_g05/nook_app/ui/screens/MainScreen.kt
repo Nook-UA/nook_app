@@ -45,6 +45,12 @@ fun MainScreen(
                             scope.launch {
                                 drawerState.open()
                             }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = "Menu Icon",
+                                tint = Color.Black
+                            )
                         }
                     )
                 }
