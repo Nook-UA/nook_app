@@ -12,6 +12,7 @@ import com.es_g05.nook_app.auth.GoogleAuthUiClient
 import com.es_g05.nook_app.ui.navigation.AppBar
 import com.es_g05.nook_app.ui.navigation.DrawerContent
 import com.es_g05.nook_app.ui.navigation.NavigationScreen
+import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     navController: NavHostController,
     onSignOut: () -> Unit,
-    googleAuthUiClient: GoogleAuthUiClient
+    googleAuthUiClient: GoogleAuthUiClient,
+    fusedLocationProviderClient: FusedLocationProviderClient
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -46,12 +48,12 @@ fun MainScreen(
                         }
                     )
                 }
-
             ) {
                 NavigationScreen(
                     navController = navController,
                     onSignOut = onSignOut,
                     googleAuthUiClient = googleAuthUiClient,
+                    fusedLocationClient = fusedLocationProviderClient
                 )
             }
         }
