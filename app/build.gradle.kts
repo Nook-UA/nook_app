@@ -2,14 +2,14 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.gms.google-services")
+    alias(libs.plugins.googleGmsGoogleServices)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("kotlin-kapt")
 }
 
 android {
     namespace = "com.es_g05.nook_app"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.es_g05.nook_app"
@@ -66,22 +66,27 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("androidx.compose.material:material-icons-extended:1.7.3")
+    // More icons instead of vector image importing
+    implementation(libs.androidx.material.icons.extended)
 
     // Google Maps Dependencies
-    implementation("com.google.android.gms:play-services-maps:19.0.0")
-    implementation("com.google.android.gms:play-services-location:21.3.0")
-    implementation("com.google.maps.android:maps-compose:2.14.0")
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.maps.compose)
 
-    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+    // Firebase Dependencies
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.play.services.auth)
 
-    implementation("com.google.firebase:firebase-auth-ktx:21.1.0")
-    implementation("com.google.android.gms:play-services-auth:20.4.1")
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0")
-    implementation("androidx.navigation:navigation-compose:2.5.3")
-    implementation("io.coil-kt:coil-compose:2.2.2")
+    // Navigation Dependencies
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.coil.compose)
+
+    // Permission dependency
+    implementation(libs.accompanist.permissions)
 }
 
 secrets {

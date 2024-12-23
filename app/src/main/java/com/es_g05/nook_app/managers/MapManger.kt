@@ -1,37 +1,30 @@
 package com.es_g05.nook_app.managers
 
 import android.Manifest
-import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
+import android.location.Location
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.tasks.await
 
-@Composable
-fun RequestLocationPermission(onPermissionGranted: () -> Unit) {
-    val context = LocalContext.current
-    val permissionState = remember {
-        mutableStateOf(
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        )
+object LocationManager {
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var appContext: Context
+
+    fun initialize(context: Context) {
+        appContext = context.applicationContext
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(appContext)
     }
 
-    LaunchedEffect(key1 = permissionState.value) {
-        if (!permissionState.value) {
-            ActivityCompat.requestPermissions(
-                context as Activity,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                1
-            )
+    suspend fun getLastLocation(): Location? {
+        return if (ActivityCompat.checkSelfPermission(appContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            val locationResult = fusedLocationClient.lastLocation
+            locationResult.await()
         } else {
-            onPermissionGranted()
+            null
         }
     }
 }
