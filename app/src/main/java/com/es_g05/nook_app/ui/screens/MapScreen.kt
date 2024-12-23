@@ -1,19 +1,18 @@
 package com.es_g05.nook_app.ui.screens
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.IntOffset
 import com.es_g05.nook_app.ui.components.ParkInformation
 import com.es_g05.nook_app.ui.components.ParkMarkerComposable
 import com.es_g05.nook_app.view_models.MapViewModel
@@ -24,8 +23,8 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import kotlin.math.roundToInt
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MissingPermission", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MapScreen(
@@ -45,8 +44,9 @@ fun MapScreen(
 
     val parks = listOf(park1, park2, park3, park4)
     val selectedPark = remember { mutableStateOf<LatLng?>(null) }
-    val isVisible = remember { mutableStateOf(true) }
-    val offsetX = remember { mutableFloatStateOf(0f) }
+
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
@@ -79,38 +79,20 @@ fun MapScreen(
                     position = park,
                     onClick = {
                         selectedPark.value = park
+                        showBottomSheet = true
                     }
                 )
             }
         }
         selectedPark.value?.let { park ->
-            Box(
-                modifier = Modifier
-                    .animateContentSize()
-                    .align(Alignment.BottomCenter)
-                    .pointerInput(Unit) {
-                        detectHorizontalDragGestures(
-                            onHorizontalDrag = {_, dragAmount ->
-                                offsetX.value += dragAmount
-                            },
-                            onDragEnd = {
-                                if (offsetX.floatValue > 300 || offsetX.floatValue < -300) {
-                                    isVisible.value = false
-                                    selectedPark.value = null
-                                    offsetX.floatValue = 0f
-                                } else {
-                                    offsetX.floatValue = 0f
-                                }
-                            }
-                        )
-                    }
-                    .offset{ IntOffset(offsetX.floatValue.roundToInt(), 0) }
-            ) {
-                ParkInformation(
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    park = park
-                )
-            }
+            ParkInformation(
+                park = park,
+                sheetState = sheetState,
+                onDismiss = {
+                    showBottomSheet = false
+                    selectedPark.value = null
+                }
+            )
         }
     }
 }
