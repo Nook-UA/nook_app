@@ -47,7 +47,6 @@ class MainActivity : ComponentActivity() {
 
         // set up fusedLocationClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-
         setContent {
             Nook_appTheme {
                 Surface(
