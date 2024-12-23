@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.googleGmsGoogleServices)
+    alias(libs.plugins.serialization)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("kotlin-kapt")
 }
@@ -87,6 +88,16 @@ dependencies {
 
     // Permission dependency
     implementation(libs.accompanist.permissions)
+
+    // Retrofit dependencies
+    implementation(libs.squareup.retrofit)
+    implementation(libs.retrofit.converter.scalars)
+
+    // Serialization dependencies
+    implementation(libs.serialization.converter)
+    implementation(libs.serialization.json)
+
+    implementation(libs.logging.interceptor)
 }
 
 secrets {
