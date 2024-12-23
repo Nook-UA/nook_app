@@ -12,14 +12,21 @@ import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.MarkerState
 
 @Composable
-fun ParkMarkerComposable(position: LatLng) {
+fun ParkMarkerComposable(
+    position: LatLng,
+    onClick: () -> Unit
+) {
     MarkerComposable(
-        state = MarkerState(position = position)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.location_marker),
-            contentDescription = "",
-            modifier = Modifier.size(50.dp)
-        )
-    }
+        state = MarkerState(position = position),
+        onClick = {
+            onClick()
+            true },
+        content = {
+            Image(
+                painter = painterResource(id = R.drawable.location_marker),
+                contentDescription = "",
+                modifier = Modifier.size(50.dp)
+            )
+        }
+    )
 }
