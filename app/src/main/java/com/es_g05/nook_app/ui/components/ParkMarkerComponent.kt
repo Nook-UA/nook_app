@@ -7,15 +7,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.es_g05.nook_app.R
+import com.es_g05.nook_app.models.NearbyParkingLot
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.MarkerState
 
 @Composable
 fun ParkMarkerComposable(
-    position: LatLng,
+    park: NearbyParkingLot,
     onClick: () -> Unit
 ) {
+    val position = LatLng(park.latitude, park.longitude)
     MarkerComposable(
         state = MarkerState(position = position),
         onClick = {

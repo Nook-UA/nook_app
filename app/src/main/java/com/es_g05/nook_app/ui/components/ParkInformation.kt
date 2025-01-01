@@ -23,12 +23,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.es_g05.nook_app.R
-import com.google.android.gms.maps.model.LatLng
+import com.es_g05.nook_app.models.NearbyParkingLot
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParkInformation(
-    park: LatLng,
+    park: NearbyParkingLot,
     sheetState: SheetState,
     onDismiss: () -> Unit
 ) {
@@ -60,12 +60,12 @@ fun ParkInformation(
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.autocarro_bar),
-                        contentDescription = "Autocarro's Bar Parking Lot",
+                        contentDescription = park.name,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
                     Text(
-                        text = "Autocarro's Bar Parking Lot",
+                        text = park.name,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
