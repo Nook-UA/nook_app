@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
@@ -24,13 +25,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.es_g05.nook_app.R
 import com.es_g05.nook_app.models.NearbyParkingLot
+import com.es_g05.nook_app.ui.theme.primaryContainerDark
+import com.es_g05.nook_app.view_models.ParkInfoUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParkInformation(
     park: NearbyParkingLot,
     sheetState: SheetState,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    parkInfoUiState: ParkInfoUiState,
 ) {
     ModalBottomSheet(
         onDismissRequest = {
@@ -40,44 +44,55 @@ fun ParkInformation(
         containerColor = Color.White,
         modifier = Modifier.fillMaxWidth()
     ) {
-
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            item {
-                Text(
-                    text = "Park details",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    modifier = Modifier.padding(bottom = 8.dp, start = 16.dp)
+        if (parkInfoUiState is ParkInfoUiState.Success) {
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                CircularProgressIndicator(
+                    color = primaryContainerDark,
+                    modifier = Modifier.align(Alignment.Center)
+                        .padding(16.dp)
                 )
             }
-
-            item {
-                Box(
-                    modifier = Modifier.fillMaxWidth().height(200.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.autocarro_bar),
-                        contentDescription = park.name,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                item {
                     Text(
-                        text = park.name,
-                        fontSize = 20.sp,
+                        text = "Park details",
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(16.dp)
-                            .background(
-                                color = Color(0xAAFFAC75),
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 8.dp, start = 16.dp)
                     )
+                }
+
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().height(200.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.autocarro_bar),
+                            contentDescription = park.name,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                        Text(
+                            text = park.name,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(16.dp)
+                                .background(
+                                    color = Color(0xAAFFAC75),
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
                 }
             }
         }

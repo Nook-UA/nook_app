@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import coil.network.HttpException
 import com.es_g05.nook_app.models.NearbyParkingLot
+import com.es_g05.nook_app.models.ParkingLotInformation
 import com.es_g05.nook_app.repositories.NookParksRepository
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
@@ -21,6 +22,12 @@ sealed interface NookUiState {
     data class Success(val parks: List<NearbyParkingLot>): NookUiState
     object Error: NookUiState
     object Loading: NookUiState
+}
+
+sealed interface ParkInfoUiState {
+    data class Success(val parkInfo: ParkingLotInformation): ParkInfoUiState
+    object Error: ParkInfoUiState
+    object Loading: ParkInfoUiState
 }
 
 class MapViewModelFactory(
@@ -39,6 +46,9 @@ class MapViewModel(
 ): ViewModel() {
 
     var nookUiState: NookUiState by mutableStateOf(NookUiState.Loading)
+        private set
+
+    var parkInfoUiState: ParkInfoUiState by mutableStateOf(ParkInfoUiState.Loading)
         private set
 
     private var _location = MutableStateFlow<Location>(
@@ -76,6 +86,19 @@ class MapViewModel(
                 NookUiState.Error
             } catch (e: HttpException) {
                 NookUiState.Error
+            }
+        }
+    }
+
+    fun getParkInformation(parkId: Int) {
+        viewModelScope.launch {
+            parkInfoUiState = ParkInfoUiState.Loading
+            parkInfoUiState = try {
+                ParkInfoUiState.Success(nookParksRepository.getParkInformation(parkId = parkId))
+            } catch (e: IOException) {
+                ParkInfoUiState.Error
+            } catch (e: HttpException) {
+                ParkInfoUiState.Error
             }
         }
     }
