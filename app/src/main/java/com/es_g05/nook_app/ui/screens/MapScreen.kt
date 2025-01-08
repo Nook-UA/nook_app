@@ -1,7 +1,6 @@
 package com.es_g05.nook_app.ui.screens
 
 import android.annotation.SuppressLint
-import android.location.Location
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,7 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -61,13 +63,12 @@ fun MapScreen(
     val uiSettings = remember {
         MapUiSettings(zoomControlsEnabled = false)
     }
-    val userLocation = viewModel.getCoordinates()
     val selectedPark = remember { mutableStateOf<NearbyParkingLot?>(null) }
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
 
-    var locationSelectionMode by rememberSaveable { mutableStateOf(false) }
-    var selectedLocation by rememberSaveable { mutableStateOf<LatLng?>(null) }
+    var locationSelectionMode by rememberSaveable { mutableIntStateOf(0) } // 0 -> Nothing, 1 -> Click in the map, 2 -> Clear Selected Location
+    val selectedLocation by viewModel.selectLocation.collectAsState()
 
     // Observe changes in uiState to trigger Toast Messages for errors
     val context = LocalContext.current
@@ -80,6 +81,12 @@ fun MapScreen(
     LaunchedEffect(parkInfoUiState) {
         if (parkInfoUiState is ParkInfoUiState.Error) {
             Toast.makeText(context, "An error occurred while fetching Park Information", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    LaunchedEffect(locationSelectionMode) {
+        if (locationSelectionMode == 1) {
+            Toast.makeText(context, "Click on the map to select a new location", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -104,31 +111,20 @@ fun MapScreen(
             uiSettings = uiSettings,
             properties = properties,
             onMapClick = { latLng ->
-                if (locationSelectionMode) {
-                    selectedLocation = latLng
+                if (locationSelectionMode == 1) {
+                    viewModel.setSelectedLocation(latLng)
                 } else {
                     selectedPark.value = null
                 }
-            }
+            },
+
         ) {
-            if (!locationSelectionMode) {
+            selectedLocation?.let {
                 Marker(
-                    state = MarkerState(
-                        position = LatLng(
-                            userLocation.latitude,
-                            userLocation.longitude
-                        )
-                    ),
+                    state = MarkerState(position = it),
+                    title = "Selected Location",
+                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)
                 )
-            }
-            if (locationSelectionMode && selectedLocation != null) {
-                selectedLocation?.let {
-                    Marker(
-                        state = MarkerState(position = it),
-                        title = "Selected Location",
-                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)
-                    )
-                }
             }
             if (uiState is NookUiState.Success) {
                 uiState.parks.forEach { park ->
@@ -156,31 +152,46 @@ fun MapScreen(
 
         FloatingActionButton(
             onClick = {
-                if (locationSelectionMode) {
-                    selectedLocation?.let {
-                        viewModel.updateLocation(Location("").apply {
-                            latitude = it.latitude
-                            longitude = it.longitude
-                        })
+                when (locationSelectionMode) {
+                    0 -> {
+                        locationSelectionMode = 1
+                    }
+                    1 -> {
+                        if (selectedLocation != null) {
+                            viewModel.confirmSelectedLocation()
+                            locationSelectionMode = 2
+                        }
+                    }
+                    2 -> {
+                        viewModel.clearSelectedLocation()
+                        locationSelectionMode = 0
                     }
                 }
-                locationSelectionMode = !locationSelectionMode
-                selectedLocation = null
             },
             modifier = Modifier.align(Alignment.BottomEnd)
-                .padding(16.dp)
+                .padding(16.dp),
+            containerColor = primaryContainerDark,
         ) {
             Icon(
-                imageVector = if (locationSelectionMode) Icons.Default.Check else Icons.Default.Place,
-                contentDescription = if(locationSelectionMode) "Confirm Location" else "Select Location"
+                imageVector = when (locationSelectionMode) {
+                    2 -> Icons.Default.Close
+                    1 -> Icons.Default.Check
+                    else -> Icons.Default.Place
+                },
+                contentDescription = when (locationSelectionMode) {
+                    2 -> "Cancel Selection"
+                    1 -> "Confirm Location"
+                    else -> "Select Location"
+                },
+                tint = Color.White
             )
         }
 
         if (uiState is NookUiState.Loading) {
             Box(
                 modifier = Modifier.fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f))// Semi-transparent background
-                    .clickable(enabled = false) {}, // Block touches
+                    .background(Color.Black.copy(alpha = 0.5f))
+                    .clickable(enabled = false) {},
                 contentAlignment = Alignment.Center
             ) {
                 Row(

@@ -6,8 +6,16 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ParkingLotInformation(
     @SerialName("parking_lot_id")
-    var parkingLotId: Int,
+    var parkingLotId: String? = null,
     @SerialName("image_url")
-    var imageUrl: String,
-    var occupancy: String
+    var imageUrl: String? = null,
+    var occupancy: Occupancy? = null,
+    var detail: String? = null
+)
+
+@Serializable
+data class Occupancy(
+    var freed: Int? = null,
+    var occupied: Int? = null,
+    var total: Int? = null
 )

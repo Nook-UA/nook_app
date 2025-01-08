@@ -98,6 +98,7 @@ dependencies {
     implementation(libs.serialization.json)
 
     implementation(libs.logging.interceptor)
+
 }
 
 secrets {

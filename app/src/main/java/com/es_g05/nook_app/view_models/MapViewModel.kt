@@ -11,6 +11,7 @@ import coil.network.HttpException
 import com.es_g05.nook_app.models.NearbyParkingLot
 import com.es_g05.nook_app.models.ParkingLotInformation
 import com.es_g05.nook_app.repositories.NookParksRepository
+import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,15 +52,24 @@ class MapViewModel(
     var parkInfoUiState: ParkInfoUiState by mutableStateOf(ParkInfoUiState.Loading)
         private set
 
-    private var _location = MutableStateFlow<Location>(
+    private var _location = MutableStateFlow(
         Location("DEFAULT_LOCATION").apply {
             latitude = 40.638076
             longitude = -8.653603
         }
     )
 
-    val location: StateFlow<Location> = _location
-    val properties = mutableStateOf(MapProperties(mapType = MapType.NORMAL))
+    private val _currentUserLocation = MutableStateFlow(
+        Location("DEFAULT_LOCATION").apply {
+            latitude = 40.638076
+            longitude = -8.653603
+        }
+    )
+
+    private val _selectedLocation = MutableStateFlow<LatLng?>(null)
+    val selectLocation: StateFlow<LatLng?> = _selectedLocation
+    val properties = mutableStateOf(MapProperties(mapType = MapType.NORMAL, isMyLocationEnabled = true))
+
 
     init {
         getNearbyParks()
@@ -74,10 +84,30 @@ class MapViewModel(
         return _location.value
     }
 
+    fun setSelectedLocation(location: LatLng?) {
+        _selectedLocation.value = location
+    }
+
+    fun confirmSelectedLocation() {
+        _selectedLocation.value?.let {
+            updateLocation(Location("").apply {
+                latitude = it.latitude
+                longitude = it.longitude
+            })
+        }
+    }
+
+    fun clearSelectedLocation() {
+        _selectedLocation.value = null
+        _location.value = _currentUserLocation.value
+        getNearbyParks()
+    }
+
     fun getNearbyParks() {
         viewModelScope.launch {
             nookUiState = NookUiState.Loading
             nookUiState = try {
+
                 NookUiState.Success(nookParksRepository.getNearbyParks(
                     lat = _location.value.latitude,
                     lon = _location.value.longitude

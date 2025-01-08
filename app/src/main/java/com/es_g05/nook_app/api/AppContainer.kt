@@ -14,7 +14,8 @@ interface AppContainer {
 }
 
 class DefaultAppContainer : AppContainer {
-    private val baseUrl: String = "http://192.168.1.124:8000/"
+
+    private val baseUrl: String = "http://192.168.93.149:8000/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

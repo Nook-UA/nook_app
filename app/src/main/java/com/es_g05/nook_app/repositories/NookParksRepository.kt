@@ -17,6 +17,6 @@ class NetworkNookParksRepository(
         lon: Double
     ): List<NearbyParkingLot> = nookApiService.getNearbyParks(lat = lat, lon = lon)
 
-    override suspend fun getParkInformation(parkId: Int):
-            ParkingLotInformation = nookApiService.getParkInfo(parkId = parkId)
+    override suspend fun getParkInformation(parkId: Int): ParkingLotInformation =
+        nookApiService.getParkInfo(parkId = parkId)
 }
