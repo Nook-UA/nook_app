@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -169,7 +170,7 @@ fun MapScreen(
                 }
             },
             modifier = Modifier.align(Alignment.BottomEnd)
-                .padding(16.dp),
+                .padding(32.dp),
             containerColor = primaryContainerDark,
         ) {
             Icon(
@@ -183,6 +184,21 @@ fun MapScreen(
                     1 -> "Confirm Location"
                     else -> "Select Location"
                 },
+                tint = Color.White
+            )
+        }
+
+        FloatingActionButton(
+            modifier = Modifier.align(Alignment.BottomStart)
+                .padding(32.dp),
+            containerColor = primaryContainerDark,
+            onClick = {
+                viewModel.getNearbyParks()
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Refresh,
+                contentDescription = "Refresh Nearby Parking Lots",
                 tint = Color.White
             )
         }

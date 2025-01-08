@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.es_g05.nook_app.R
 import com.es_g05.nook_app.models.NearbyParkingLot
 import com.es_g05.nook_app.ui.theme.errorLight
@@ -83,8 +84,8 @@ fun ParkInformation(
                     Box(
                         modifier = Modifier.fillMaxWidth().height(200.dp)
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.autocarro_bar),
+                        AsyncImage(
+                            model = park.picture,
                             contentDescription = park.name,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
