@@ -9,10 +9,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.es_g05.nook_app.api.AppContainer
 import com.es_g05.nook_app.auth.GoogleAuthUiClient
 import com.es_g05.nook_app.ui.screens.MapScreen
 import com.es_g05.nook_app.ui.screens.ProfileScreen
 import com.es_g05.nook_app.view_models.MapViewModel
+import com.es_g05.nook_app.view_models.MapViewModelFactory
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -23,7 +25,8 @@ fun NavigationScreen(
     navController: NavHostController,
     onSignOut: () -> Unit,
     googleAuthUiClient: GoogleAuthUiClient,
-    fusedLocationClient: FusedLocationProviderClient
+    fusedLocationClient: FusedLocationProviderClient,
+    appContainer: AppContainer
 ) {
     NavHost(
         navController = navController,
@@ -31,7 +34,9 @@ fun NavigationScreen(
     ) {
         composable(NavItem.Home.path) {
             val localContext = LocalContext.current
-            val mapViewModel: MapViewModel = viewModel()
+            val mapViewModel: MapViewModel = viewModel(
+                factory = MapViewModelFactory(appContainer.nookParksRepository)
+            )
 
             val locationPermissions = rememberMultiplePermissionsState(
                 permissions = listOf(
